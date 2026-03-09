@@ -29,7 +29,7 @@ Las operaciones CRUD (Crear, Leer, Actualizar, Eliminar) se comunican directamen
 Dado que es un proyecto frontend estático que utiliza Tailwind vía CDN, no requiere instalación de dependencias locales (como `npm install`).
 
 1.  **Clonar el repositorio**:
-    git clone https://github.com/FranSfw/TaskBackend.git
+    git clone https://github.com/FranSfw/task-manager-front
     cd TaskBackend/task-manager-front
     
 2.  **Abrir el proyecto**:
