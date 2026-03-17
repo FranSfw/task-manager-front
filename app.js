@@ -6,10 +6,12 @@ const taskList = document.getElementById('taskList');
 const emptyMsg = document.getElementById('emptyMsg');
 const logoutBtn = document.getElementById('logoutBtn');
 
+const appContainer = document.getElementById('appContainer');
+
 // web token
 function checkAuthError(response) {
-    if (response.status === 401 || response.status === 403) {
-        window.location.href = 'login.html';
+    if (!response || response.status === 401 || response.status === 403) {
+        window.location.replace('login.html');
         return true;
     }
     return false;
@@ -28,12 +30,16 @@ async function logout() {
 async function fetchTasks() {
     try {
         const response = await fetch(`${API_URL}/tasks`, { credentials: 'include' });
+
         if (checkAuthError(response)) return;
+
+        appContainer.classList.remove('hidden');
 
         const tasks = await response.json();
         renderTasks(tasks);
     } catch (error) {
-        console.error('Error al obtener las tareas:', error);
+        console.error('Error de red o conexión:', error);
+        window.location.replace('login.html');
     }
 }
 
