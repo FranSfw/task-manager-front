@@ -1,14 +1,13 @@
 const API_URL = 'https://task-manager-api-production-56f5.up.railway.app';
 
+const appContainer = document.getElementById('appContainer');
 const taskInput = document.getElementById('taskInput');
 const addBtn = document.getElementById('addBtn');
 const taskList = document.getElementById('taskList');
 const emptyMsg = document.getElementById('emptyMsg');
 const logoutBtn = document.getElementById('logoutBtn');
 
-const appContainer = document.getElementById('appContainer');
-
-// web token
+// JWT
 function checkAuthError(response) {
     if (!response || response.status === 401 || response.status === 403) {
         window.location.replace('login.html');
@@ -20,30 +19,29 @@ function checkAuthError(response) {
 async function logout() {
     try {
         await fetch(`${API_URL}/logout`, { method: 'POST', credentials: 'include' });
-        window.location.href = 'login.html';
+        window.location.replace('login.html');
     } catch (error) {
         console.error('Error al cerrar sesión', error);
     }
 }
 
-// Read all tasks
+// CRUD
 async function fetchTasks() {
     try {
         const response = await fetch(`${API_URL}/tasks`, { credentials: 'include' });
-
+        
         if (checkAuthError(response)) return;
 
-        appContainer.classList.remove('hidden');
+        if(appContainer) appContainer.classList.remove('hidden');
 
         const tasks = await response.json();
         renderTasks(tasks);
     } catch (error) {
-        console.error('Error de red o conexión:', error);
+        console.error('Error de red:', error);
         window.location.replace('login.html');
     }
 }
 
-// Read
 function renderTasks(tasks) {
     taskList.innerHTML = '';
     if (tasks.length === 0) {
@@ -71,7 +69,6 @@ function renderTasks(tasks) {
     }
 }
 
-// Create
 async function addTask() {
     const title = taskInput.value.trim();
     if (!title) return;
@@ -101,7 +98,6 @@ async function addTask() {
     }
 }
 
-// Delete
 async function deleteTask(id) {
     try {
         const response = await fetch(`${API_URL}/tasks/${id}`, {
@@ -115,7 +111,6 @@ async function deleteTask(id) {
     }
 }
 
-//Toggle
 async function toggleTask(id, currentStatus) {
     try {
         const response = await fetch(`${API_URL}/tasks/${id}`, {
@@ -132,11 +127,11 @@ async function toggleTask(id, currentStatus) {
 }
 
 // Event Listeners
-addBtn.addEventListener('click', addTask);
-taskInput.addEventListener('keypress', (e) => {
+if(addBtn) addBtn.addEventListener('click', addTask);
+if(taskInput) taskInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') addTask();
 });
-logoutBtn.addEventListener('click', logout);
+if(logoutBtn) logoutBtn.addEventListener('click', logout);
 
 // Iniciar aplicación
 fetchTasks();
